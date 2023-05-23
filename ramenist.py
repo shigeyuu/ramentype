@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: Shift-JIS -*-
 
 import os
 from flask import Flask, request, redirect, render_template, flash
@@ -22,14 +20,14 @@ app = Flask(__name__)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-model = load_model('./ramenmodel.h5',compile=False)#�w�K�ς݃��f�������[�h
+model = load_model('./ramenmodel.h5',compile=False)#モデルのよみこみ
 
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('�t�@�C��')
+            flash('ファイルがありません')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
@@ -40,11 +38,11 @@ def upload_file():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             filepath = os.path.join(UPLOAD_FOLDER, filename)
 
-            #�󂯎�����摜��ǂݍ��݁Anp�`���ɕϊ�
+            #画像をリサイズ
             img = image.load_img(filepath, grayscale=True, target_size=(image_size,image_size))
             img = image.img_to_array(img)
             data = np.array([img])
-            #�ϊ������f�[�^�����f���ɓn���ė\������
+            # 予測を行う
             result = model.predict(data)[0]
             predicted = result.argmax()
             pred_answer = "This is " + classes[predicted]
