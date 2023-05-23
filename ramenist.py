@@ -1,4 +1,5 @@
-
+#!/usr/bin/python
+# -*- coding: Shift-JIS -*-
 
 import os
 from flask import Flask, request, redirect, render_template, flash
@@ -21,14 +22,14 @@ app = Flask(__name__)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-model = load_model('./ramenmodel.h5',compile=False)#ŠwKÏ‚İƒ‚ƒfƒ‹‚ğƒ[ƒh
+model = load_model('./ramenmodel.h5',compile=False)#ï¿½wï¿½Kï¿½Ï‚İƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h
 
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash('ƒtƒ@ƒCƒ‹')
+            flash('ï¿½tï¿½@ï¿½Cï¿½ï¿½')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
@@ -39,11 +40,11 @@ def upload_file():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             filepath = os.path.join(UPLOAD_FOLDER, filename)
 
-            #ó‚¯æ‚Á‚½‰æ‘œ‚ğ“Ç‚İ‚İAnpŒ`®‚É•ÏŠ·
+            #ï¿½ó‚¯ï¿½ï¿½ï¿½ï¿½ï¿½æ‘œï¿½ï¿½Ç‚İï¿½ï¿½İAnpï¿½`ï¿½ï¿½ï¿½É•ÏŠï¿½
             img = image.load_img(filepath, grayscale=True, target_size=(image_size,image_size))
             img = image.img_to_array(img)
             data = np.array([img])
-            #•ÏŠ·‚µ‚½ƒf[ƒ^‚ğƒ‚ƒfƒ‹‚É“n‚µ‚Ä—\‘ª‚·‚é
+            #ï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½É“nï¿½ï¿½ï¿½Ä—\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             result = model.predict(data)[0]
             predicted = result.argmax()
             pred_answer = "This is " + classes[predicted]
